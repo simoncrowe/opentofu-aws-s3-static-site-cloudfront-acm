@@ -22,7 +22,15 @@ resource "aws_cloudfront_distribution" "subdomain" {
     allowed_methods        = ["GET", "HEAD", "OPTIONS"]
     cached_methods         = ["GET", "HEAD"]
     viewer_protocol_policy = "redirect-to-https"
-    target_origin_id       = "site-files-bucket"
+    target_origin_id       = "site-files-bucket" 
+    
+    forwarded_values {
+      query_string = false
+
+      cookies {
+        forward = "none"
+      }
+    }
   }
 
   viewer_certificate {
@@ -60,9 +68,17 @@ resource "aws_cloudfront_distribution" "root_domain" {
     # Using the CachingDisabled managed policy ID:
     cache_policy_id        = "4135ea2d-6df8-44a3-9df3-4b5a84be39ad"
     allowed_methods        = ["GET", "HEAD", "OPTIONS"]
-    cached_methods         = []
-    target_origin_id       = "site-redirect-bucket"
+    cached_methods         = ["GET"]
+    target_origin_id       = "site-redirect-bucket" 
     viewer_protocol_policy = "redirect-to-https"
+    
+    forwarded_values {
+      query_string = false
+
+      cookies {
+        forward = "none"
+      }
+    }
   }
 
   viewer_certificate {
