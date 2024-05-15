@@ -3,12 +3,18 @@ resource "aws_cloudfront_distribution" "subdomain" {
   aliases = [local.subdomain]
 
   origin {
-    domain_name = aws_s3_bucket_website_configuration.subdomain.website_endpoint
-    origin_id   = aws_s3_bucket.subdomain.id
+    origin_id   = "site-files-bucket"
+    domain_name = aws_s3_bucket_website_configuration.root_domain.website_endpoint
 
     custom_header {
       name  = "referer"
       value = random_password.referer_secret.result
+    }
+    custom_origin_config {
+      http_port              = 80
+      https_port             = 443
+      origin_protocol_policy = "http-only"
+      origin_ssl_protocols   = ["TLSv1.1", "TLSv1.2"]
     }
   }
 
@@ -16,7 +22,7 @@ resource "aws_cloudfront_distribution" "subdomain" {
     allowed_methods        = ["GET", "HEAD", "OPTIONS"]
     cached_methods         = ["GET", "HEAD"]
     viewer_protocol_policy = "redirect-to-https"
-    target_origin_id       = aws_s3_bucket.subdomain.id
+    target_origin_id       = "site-files-bucket"
   }
 
   viewer_certificate {
@@ -38,8 +44,15 @@ resource "aws_cloudfront_distribution" "root_domain" {
   aliases = [var.domain]
 
   origin {
+    origin_id   = "site-redirect-bucket"
     domain_name = aws_s3_bucket_website_configuration.root_domain.website_endpoint
-    origin_id   = aws_s3_bucket.root_domain.id
+
+    custom_origin_config {
+      http_port              = 80
+      https_port             = 443
+      origin_protocol_policy = "http-only"
+      origin_ssl_protocols   = ["TLSv1.1", "TLSv1.2"]
+    }
   }
 
   # AWS Managed Caching Policy (CachingDisabled)
@@ -48,7 +61,7 @@ resource "aws_cloudfront_distribution" "root_domain" {
     cache_policy_id        = "4135ea2d-6df8-44a3-9df3-4b5a84be39ad"
     allowed_methods        = ["GET", "HEAD", "OPTIONS"]
     cached_methods         = []
-    target_origin_id       = aws_s3_bucket.root_domain.id
+    target_origin_id       = "site-redirect-bucket"
     viewer_protocol_policy = "redirect-to-https"
   }
 
