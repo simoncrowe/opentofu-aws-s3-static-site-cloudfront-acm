@@ -22,8 +22,8 @@ resource "aws_cloudfront_distribution" "subdomain" {
     allowed_methods        = ["GET", "HEAD", "OPTIONS"]
     cached_methods         = ["GET", "HEAD"]
     viewer_protocol_policy = "redirect-to-https"
-    target_origin_id       = "site-files-bucket" 
-    
+    target_origin_id       = "site-files-bucket"
+
     forwarded_values {
       query_string = false
 
@@ -34,8 +34,8 @@ resource "aws_cloudfront_distribution" "subdomain" {
   }
 
   viewer_certificate {
-    acm_certificate_arn = var.acm_cert_arn 
-    ssl_support_method = "sni-only"
+    acm_certificate_arn = var.acm_cert_arn
+    ssl_support_method  = "sni-only"
   }
 
   restrictions {
@@ -64,27 +64,17 @@ resource "aws_cloudfront_distribution" "root_domain" {
     }
   }
 
-  # AWS Managed Caching Policy (CachingDisabled)
   default_cache_behavior {
-    # Using the CachingDisabled managed policy ID:
-    cache_policy_id        = "4135ea2d-6df8-44a3-9df3-4b5a84be39ad"
+    target_origin_id       = "site-redirect-bucket"
+    cache_policy_id        = local.caching_disabled_managed_cloudfront_policy_id
     allowed_methods        = ["GET", "HEAD", "OPTIONS"]
-    cached_methods         = ["GET"]
-    target_origin_id       = "site-redirect-bucket" 
+    cached_methods         = ["GET", "HEAD"]
     viewer_protocol_policy = "redirect-to-https"
-    
-    forwarded_values {
-      query_string = false
-
-      cookies {
-        forward = "none"
-      }
-    }
   }
 
   viewer_certificate {
-    acm_certificate_arn = var.acm_cert_arn 
-    ssl_support_method = "sni-only"
+    acm_certificate_arn = var.acm_cert_arn
+    ssl_support_method  = "sni-only"
   }
 
   restrictions {

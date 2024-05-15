@@ -4,7 +4,7 @@ variable "domain" {
 }
 
 variable "acm_cert_arn" {
-  type = string
+  type        = string
   description = "ARN of the public ACM certificate for domain (must be in us-west-1)"
 }
 
