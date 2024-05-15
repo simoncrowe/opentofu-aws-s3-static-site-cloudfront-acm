@@ -3,6 +3,11 @@ variable "domain" {
   description = "Domain name for site. This is a root domain e.g. example.com"
 }
 
+variable "acm_cert_arn" {
+  type = string
+  description = "ARN of the public ACM certificate for domain (must be in us-west-1)"
+}
+
 variable "index_key" {
   type        = string
   description = "The key of the landing page in the bucket"

@@ -34,7 +34,8 @@ resource "aws_cloudfront_distribution" "subdomain" {
   }
 
   viewer_certificate {
-    acm_certificate_arn = aws_acm_certificate.domain.arn
+    acm_certificate_arn = var.acm_cert_arn 
+    ssl_support_method = "sni-only"
   }
 
   restrictions {
@@ -82,7 +83,8 @@ resource "aws_cloudfront_distribution" "root_domain" {
   }
 
   viewer_certificate {
-    acm_certificate_arn = aws_acm_certificate.domain.arn
+    acm_certificate_arn = var.acm_cert_arn 
+    ssl_support_method = "sni-only"
   }
 
   restrictions {
