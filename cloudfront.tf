@@ -1,10 +1,11 @@
 resource "aws_cloudfront_distribution" "subdomain" {
   enabled = true
   aliases = [local.subdomain]
+  comment = "CDN for website files"
 
   origin {
     origin_id   = "site-files-bucket"
-    domain_name = aws_s3_bucket_website_configuration.root_domain.website_endpoint
+    domain_name = aws_s3_bucket_website_configuration.subdomain.website_endpoint
 
     custom_header {
       name  = "referer"
@@ -51,6 +52,7 @@ resource "aws_cloudfront_distribution" "subdomain" {
 resource "aws_cloudfront_distribution" "root_domain" {
   enabled = true
   aliases = [var.domain]
+  comment = "CDN for root domain redirect"
 
   origin {
     origin_id   = "site-redirect-bucket"
