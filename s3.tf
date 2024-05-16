@@ -23,6 +23,30 @@ resource "aws_s3_bucket_public_access_block" "subdomain" {
   restrict_public_buckets = false
 }
 
+data "aws_iam_policy_document" "subdomain" {
+  statement {
+    effect = "Allow"
+
+    principals {
+      type        = "AWS"
+      identifiers = ["*"]
+    }
+
+    actions = ["s3:*"]
+
+    resources = [
+      "arn:aws:s3:::${aws_s3_bucket.subdomain.id}",
+      "arn:aws:s3:::${aws_s3_bucket.subdomain.id}/*"
+    ]
+  }
+}
+
+resource "aws_s3_bucket_policy" "subdomain" {
+  bucket = aws_s3_bucket.subdomain.id
+  policy = data.aws_iam_policy_document.subdomain.json
+}
+
+
 resource "aws_s3_bucket" "root_domain" {
   bucket = var.domain
 }
