@@ -25,13 +25,7 @@ resource "aws_cloudfront_distribution" "this" {
     viewer_protocol_policy = "redirect-to-https"
     target_origin_id       = "site-files-bucket"
 
-    forwarded_values {
-      query_string = false
-
-      cookies {
-        forward = "none"
-      }
-    }
+    cache_policy_id = local.optimised_uncompressed_managed_cloudfront_policy_id
   }
 
   viewer_certificate {
