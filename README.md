@@ -22,7 +22,7 @@ terraform {
   backend "s3" {
     bucket = "YOUR_TERRAFORM_BACKEND_BUCKET"
     key    = "YOUR_DOMAIN_NAME"
-    region = "eu-north-1"
+    region = "THE_REGION_OF_YOUR_TERRAFORM_BACKEND_BUCKET"
   }
 
   required_providers {
@@ -50,7 +50,7 @@ output "site_cdn_domain" {
 ## Manual steps
 
 This module does not include certificate validation or other DNS config. 
-You will need to do the following:
+You will need to do the following manually.
 
 ### before `terraform/tofu apply`
 * Add a public certificate for your domain using ACM in the `us-west-1` AWS region (Northern Virginia). Use the ARN of this certificate for the `acm_cert_arn` to this module.
