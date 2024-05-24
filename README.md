@@ -4,13 +4,13 @@ This is a simple OpenTofu/Terraform module for provisioning a static website
 using AWS s3, cloudfront.
 
 This module uses s3's website feature. This means that public access to the bucket
-needs to be permitted. In the intests of security, access to the bucket is restrited
-to clients that send the correct `referer` header. The CloudFront distibution is
+needs to be permitted. In the interests of security, access to the bucket is restricted
+to clients that send the correct `referer` header. The CloudFront distribution is
 configured to include this header when making requests to the s3 website origin.
 
 Unlike many examples, this does not create a bucket and distribution for a `www`
 subdomain as well as the main domain. This is because the `www.` convention isn't
-as widespread as it once was. The additional complexity and cost isn't justified.
+as widespread as it once was. The additional complexity and cost aren't justified.
 
 
 ## Example
@@ -52,8 +52,11 @@ output "site_cdn_domain" {
 This module does not include certificate validation or other DNS config. 
 You will need to do the following:
 
-* Add an public certificate for your domain using ACM in the `us-west-1` AWS region (Northern Virginia)
-* Add CNAME DNS records to your domain to validate the ACM certificate
+### before `terraform/tofu apply`
+* Add a public certificate for your domain using ACM in the `us-west-1` AWS region (Northern Virginia). Use the ARN of this certificate for the `acm_cert_arn` to this module.
+* Add CNAME DNS records to your domain to validate the ACM certificate.
+
+### After `terraform/tofu apply`
 * Once the CDN exists, add a CNAME DNS record pointing to its domain name (`somerandomchars.cloudfront.net`) to your domain.
 
 <!-- BEGIN_TF_DOCS -->
