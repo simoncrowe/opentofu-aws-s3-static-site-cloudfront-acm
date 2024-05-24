@@ -38,6 +38,12 @@ data "aws_iam_policy_document" "this" {
       "arn:aws:s3:::${aws_s3_bucket.this.id}",
       "arn:aws:s3:::${aws_s3_bucket.this.id}/*"
     ]
+
+    condition {
+      test     = "StringLike"
+      values   = [random_password.referer_secret.result]
+      variable = "aws:Referer"
+    }
   }
 }
 
